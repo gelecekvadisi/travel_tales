@@ -32,16 +32,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:
-          const EdgeInsets.symmetric(vertical: Constants.defaultPadding / 2),
-      child: Column(
-        children: [
-          _buildLabel(context),
-          const SizedBox(height: Constants.defaultPadding / 3),
-          _buildField(context),
-        ],
-      ),
+    return Column(
+      children: [
+        _buildLabel(context),
+        const SizedBox(height: Constants.defaultPadding / 3),
+        _buildField(context),
+      ],
     );
   }
 
@@ -53,7 +49,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         hintText: widget.hint,
         // hintStyle: Theme.of(context).textTheme.bodyMedium,
-        contentPadding: const EdgeInsets.all(Constants.defaultPadding * 0.75),
+        contentPadding: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding, vertical: Constants.defaultPadding/2,),
         border: OutlineInputBorder(
           borderSide: const BorderSide(width: Constants.defaultBorderWidth),
           borderRadius: BorderRadius.circular(Constants.defaultRadius),
