@@ -2,10 +2,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:travel_tales/pages/register_page.dart';
 import 'package:travel_tales/util/constants.dart';
 import 'package:travel_tales/util/style.dart';
 import 'package:travel_tales/widgets/fields/custom_text_form_field.dart';
 import 'package:travel_tales/widgets/logo_widget.dart';
+
+import '../util/routes.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({super.key});
@@ -27,8 +30,7 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 6,
                   child: SizedBox(
-                      // height: Constants.defaultPadding * 1.5,
-                      ),
+                      )
                 ),
                 Text(
                   "Hoş Geldiniz!",
@@ -39,8 +41,7 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 1,
                   child: SizedBox(
-                    // height: Constants.defaultPadding / 4,
-                  ),
+                  )
                 ),
                 const Text(
                   "Kayıtlı hesabınıza ait E-Posta ve Parola bilginizi girerek oturum açabilirsiniz.",
@@ -49,8 +50,7 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 6,
                   child: SizedBox(
-                      // height: Constants.defaultPadding * 1.5,
-                      ),
+                      )
                 ),
                 CustomTextFormField(
                   label: "E-Posta",
@@ -72,8 +72,7 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 4,
                   child: SizedBox(
-                      // height: Constants.defaultPadding,
-                      ),
+                      )
                 ),
                 ElevatedButton(
                   onPressed: () {},
@@ -82,8 +81,7 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 2,
                   child: SizedBox(
-                      // height: Constants.defaultPadding / 2,
-                      ),
+                      )
                 ),
                 Text(
                   "veya",
@@ -95,11 +93,10 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 2,
                   child: SizedBox(
-                      // height: Constants.defaultPadding / 2,
-                      ),
+                      )
                 ),
                 ElevatedButton.icon(
-                  style: _socialButtonStyle(theme),
+                  style: Style.socialButtonStyle(theme),
                   onPressed: () {},
                   icon: Image.asset(
                     "assets/icons/google.png",
@@ -111,11 +108,10 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 2,
                   child: SizedBox(
-                    // height: Constants.defaultPadding / 2,
-                  ),
+                  )
                 ),
                 ElevatedButton.icon(
-                  style: _socialButtonStyle(theme),
+                  style: Style.socialButtonStyle(theme),
                   onPressed: () {},
                   icon: Image.asset(
                     "assets/icons/twitter.png",
@@ -127,20 +123,24 @@ class LoginPage extends StatelessWidget {
                 const Expanded(
                   flex: 8,
                   child: SizedBox(
-                      // height: Constants.defaultPadding * 2,
-                      ),
+                      )
                 ),
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      const TextSpan(text: "Bir hesabın yok mu? "),
-                      TextSpan(
-                        text: "Şimdi kaydol!",
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: Style.primaryColor,
+                GestureDetector(
+                  onTap: (){
+                    _navigateToRegisterPage(context);
+                  },
+                  child: Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(text: "Bir hesabın yok mu? "),
+                        TextSpan(
+                          text: "Şimdi kaydol!",
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: Style.primaryColor,
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ],
@@ -149,17 +149,6 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  ButtonStyle _socialButtonStyle(ThemeData theme) {
-    return ElevatedButton.styleFrom(
-        backgroundColor: Colors.white,
-        foregroundColor: Style.textColor,
-        shape: theme.elevatedButtonTheme.style?.shape?.resolve({})?.copyWith(
-            side: const BorderSide(
-          color: Color(0xFFEBEBEB),
-          width: 2,
-        )));
   }
 
   Align _buildForgotPassword(BuildContext context) {
@@ -176,6 +165,10 @@ class LoginPage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  _navigateToRegisterPage(BuildContext context) {
+    Navigator.pushNamed(context, Routes.registerPage);
   }
 
   _forgotPassword() {

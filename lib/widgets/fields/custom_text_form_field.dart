@@ -49,10 +49,15 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       decoration: InputDecoration(
         hintText: widget.hint,
         // hintStyle: Theme.of(context).textTheme.bodyMedium,
-        contentPadding: const EdgeInsets.symmetric(horizontal: Constants.defaultPadding, vertical: Constants.defaultPadding/2,),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: Constants.defaultPadding,
+          vertical: Constants.defaultPadding / 2,
+        ),
+        constraints: BoxConstraints(minHeight: 0),
+        isCollapsed: true,
         border: OutlineInputBorder(
           borderSide: const BorderSide(width: Constants.defaultBorderWidth),
-          borderRadius: BorderRadius.circular(Constants.defaultRadius),
+          borderRadius: BorderRadius.circular(Constants.defaultRadius/2),
         ),
         suffixIcon: !isPassword
             ? null
