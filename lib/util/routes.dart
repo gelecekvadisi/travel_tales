@@ -7,7 +7,6 @@ import 'package:travel_tales/pages/login_page.dart';
 import 'package:travel_tales/pages/register_page.dart';
 
 class Routes {
-
   static const String loginPage = "login_page";
   static const String registerPage = "register_page";
 

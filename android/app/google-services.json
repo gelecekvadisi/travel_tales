@@ -12,7 +12,20 @@
           "package_name": "com.example.travel_tales"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "432376417351-e8p339r859bmlf7f6cmpfv70ved4j88d.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.travel_tales",
+            "certificate_hash": "d08878464a3f5bc113f5dbc728dd5f734a6bd158"
+          }
+        },
+        {
+          "client_id": "432376417351-4ak5n552djonms1gdhjf84c0kcjo31oe.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBW07kIDJliGQNzo2tBuy2JeEOedjYXgZk"
@@ -20,7 +33,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "432376417351-4ak5n552djonms1gdhjf84c0kcjo31oe.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "432376417351-kds2gjmscs0v1v3pbete49e6gnfjlb8g.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.travelTales"
+              }
+            }
+          ]
         }
       }
     }
