@@ -9,11 +9,15 @@ class CustomTextFormField extends StatefulWidget {
     required this.label,
     this.hint,
     this.keyboardType = TextInputType.text,
+    this.onSaved,
+    this.validator,
   });
 
   String label;
   String? hint;
   TextInputType keyboardType;
+  void Function(String?)? onSaved;
+  String? Function(String?)? validator;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -46,6 +50,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       keyboardType: widget.keyboardType,
       obscureText: isObscure,
       obscuringCharacter: Constants.obscuringCharacter,
+      validator: widget.validator,
+      onSaved: widget.onSaved,
       decoration: InputDecoration(
         hintText: widget.hint,
         // hintStyle: Theme.of(context).textTheme.bodyMedium,
