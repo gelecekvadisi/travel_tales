@@ -7,6 +7,8 @@ class AuthService {
 
   ProviderRef ref;
 
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+
   Future<User> registerUser({
     required String userName,
     required String email,
@@ -14,7 +16,6 @@ class AuthService {
   }) async {
     try {
       ref.read(userProvider.notifier).state = AsyncValue.loading();
-      var firebaseAuth = FirebaseAuth.instance;
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       var user = userCredential.user;
@@ -33,5 +34,16 @@ class AuthService {
       );
       rethrow;
     }
+  }
+
+  Future<User?> login({
+    required String email,
+    required String password,
+  }) async {
+    var credential = await firebaseAuth.signInWithEmailAndPassword(
+      email: email,
+      password: password,
+    );
+    return credential.user;
   }
 }

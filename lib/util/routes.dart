@@ -17,7 +17,7 @@ class Routes {
     switch (settings.name) {
       case "/":
       case loginPage:
-        page = const LoginPage();
+        page = LoginPage();
         break;
       case registerPage:
         page = RegisterPage();

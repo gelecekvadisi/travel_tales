@@ -1,61 +1,73 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:travel_tales/pages/register_page.dart';
+import 'package:travel_tales/providers/all_providers.dart';
 import 'package:travel_tales/util/constants.dart';
 import 'package:travel_tales/util/style.dart';
+import 'package:travel_tales/util/validators.dart';
 import 'package:travel_tales/widgets/fields/custom_text_form_field.dart';
+import 'package:travel_tales/widgets/loading_widget.dart';
 import 'package:travel_tales/widgets/logo_widget.dart';
 
 import '../util/routes.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({super.key});
+class LoginPage extends ConsumerWidget {
+  LoginPage({super.key});
+
+  String? email, password;
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     ThemeData theme = Theme.of(context);
+
+    AsyncValue userAsync = ref.watch(userProvider);
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(Constants.defaultPadding),
+      body: userAsync.isLoading
+          ? const LoadingWidget()
+          : _buildBody(context, ref, theme),
+    );
+  }
+
+  SafeArea _buildBody(BuildContext context, WidgetRef ref, ThemeData theme) {
+    return SafeArea(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(Constants.defaultPadding),
+          child: Form(
+            key: _formKey,
             child: Column(
               mainAxisSize: MainAxisSize.max,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const LogoWidget(),
-                const Expanded(
-                  flex: 6,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 6, child: SizedBox()),
                 Text(
                   "Hoş Geldiniz!",
                   style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                 ),
-                const Expanded(
-                  flex: 1,
-                  child: SizedBox(
-                  )
-                ),
+                const Expanded(flex: 1, child: SizedBox()),
                 const Text(
                   "Kayıtlı hesabınıza ait E-Posta ve Parola bilginizi girerek oturum açabilirsiniz.",
                   textAlign: TextAlign.center,
                 ),
-                const Expanded(
-                  flex: 6,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 6, child: SizedBox()),
                 CustomTextFormField(
                   label: "E-Posta",
                   hint: "E-Posta",
                   keyboardType: TextInputType.emailAddress,
+                  validator: Validators.email,
+                  onSaved: (value) {
+                    email = value;
+                  },
                 ),
                 const Expanded(
                   flex: 4,
@@ -67,22 +79,20 @@ class LoginPage extends StatelessWidget {
                   label: "Parola",
                   hint: Constants.obscuringCharacter * 6,
                   keyboardType: TextInputType.visiblePassword,
+                  validator: Validators.password,
+                  onSaved: (value) {
+                    password = value;
+                  },
                 ),
                 _buildForgotPassword(context),
-                const Expanded(
-                  flex: 4,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 4, child: SizedBox()),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    _login(ref, context);
+                  },
                   child: const Text("Giriş Yap"),
                 ),
-                const Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 2, child: SizedBox()),
                 Text(
                   "veya",
                   style: Theme.of(context)
@@ -90,11 +100,7 @@ class LoginPage extends StatelessWidget {
                       .bodyMedium
                       ?.copyWith(color: theme.hintColor),
                 ),
-                const Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 2, child: SizedBox()),
                 ElevatedButton.icon(
                   style: Style.socialButtonStyle(theme),
                   onPressed: () {},
@@ -105,11 +111,7 @@ class LoginPage extends StatelessWidget {
                   ),
                   label: const Text("Google ile Oturum Aç"),
                 ),
-                const Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                  )
-                ),
+                const Expanded(flex: 2, child: SizedBox()),
                 ElevatedButton.icon(
                   style: Style.socialButtonStyle(theme),
                   onPressed: () {},
@@ -120,13 +122,9 @@ class LoginPage extends StatelessWidget {
                   ),
                   label: const Text("Twitter ile Oturum Aç"),
                 ),
-                const Expanded(
-                  flex: 8,
-                  child: SizedBox(
-                      )
-                ),
+                const Expanded(flex: 8, child: SizedBox()),
                 GestureDetector(
-                  onTap: (){
+                  onTap: () {
                     _navigateToRegisterPage(context);
                   },
                   child: Text.rich(
@@ -173,5 +171,24 @@ class LoginPage extends StatelessWidget {
 
   _forgotPassword() {
     //  TODO: Parola Sıfırlama işlemi yazılacak
+  }
+
+  void _login(WidgetRef ref, BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      _formKey.currentState!.save();
+
+      try {
+        ref.read(userProvider.notifier).state = const AsyncValue.loading();
+        User? user =  await ref.read(authProvider).login(
+              email: email!,
+              password: password!,
+            );
+        ref.read(userProvider.notifier).state = AsyncValue.data(user);
+        Navigator.pushNamed(context, Routes.homePage);
+      } catch (e) {
+        ref.read(userProvider.notifier).state = const AsyncValue.data(null);
+        debugPrint(e.toString());
+      }
+    }
   }
 }
