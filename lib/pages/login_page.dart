@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:travel_tales/pages/register_page.dart';
 import 'package:travel_tales/providers/all_providers.dart';
 import 'package:travel_tales/util/constants.dart';
@@ -103,7 +104,9 @@ class LoginPage extends ConsumerWidget {
                 const Expanded(flex: 2, child: SizedBox()),
                 ElevatedButton.icon(
                   style: Style.socialButtonStyle(theme),
-                  onPressed: () {},
+                  onPressed: () {
+                    _googleSignIn(context, ref);
+                  },
                   icon: Image.asset(
                     "assets/icons/google.png",
                     height: 24,
@@ -111,7 +114,7 @@ class LoginPage extends ConsumerWidget {
                   ),
                   label: const Text("Google ile Oturum Aç"),
                 ),
-                const Expanded(flex: 2, child: SizedBox()),
+                /* const Expanded(flex: 2, child: SizedBox()),
                 ElevatedButton.icon(
                   style: Style.socialButtonStyle(theme),
                   onPressed: () {},
@@ -121,7 +124,7 @@ class LoginPage extends ConsumerWidget {
                     width: 24,
                   ),
                   label: const Text("Twitter ile Oturum Aç"),
-                ),
+                ), */
                 const Expanded(flex: 8, child: SizedBox()),
                 GestureDetector(
                   onTap: () {
@@ -179,16 +182,35 @@ class LoginPage extends ConsumerWidget {
 
       try {
         ref.read(userProvider.notifier).state = const AsyncValue.loading();
-        User? user =  await ref.read(authProvider).login(
+        User? user = await ref.read(authProvider).login(
               email: email!,
               password: password!,
             );
         ref.read(userProvider.notifier).state = AsyncValue.data(user);
-        Navigator.pushNamed(context, Routes.homePage);
+        _navigateToHome(context);
       } catch (e) {
         ref.read(userProvider.notifier).state = const AsyncValue.data(null);
         debugPrint(e.toString());
       }
     }
+  }
+
+  _googleSignIn(BuildContext context, WidgetRef ref) async {
+    try {
+      User? user = await ref.read(authProvider).googleSignIn();
+      if (user != null) {
+        _navigateToHome(context);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void _navigateToHome(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      Routes.homePage,
+      (route) => false,
+    );
   }
 }

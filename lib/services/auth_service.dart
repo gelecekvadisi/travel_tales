@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:travel_tales/providers/all_providers.dart';
 
 class AuthService {
@@ -15,7 +16,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      ref.read(userProvider.notifier).state = AsyncValue.loading();
+      ref.read(userProvider.notifier).state = const AsyncValue.loading();
       UserCredential userCredential = await firebaseAuth
           .createUserWithEmailAndPassword(email: email, password: password);
       var user = userCredential.user;
@@ -45,5 +46,34 @@ class AuthService {
       password: password,
     );
     return credential.user;
+  }
+
+  Future<User?> googleSignIn() async {
+    try {
+      var account = await GoogleSignIn().signIn();
+      if (account == null) {
+        return null;
+      }
+      ref.read(userProvider.notifier).state = const AsyncValue.loading();
+
+      GoogleSignInAuthentication googleAuthentication =
+          await account.authentication;
+      var credential = GoogleAuthProvider.credential(
+        idToken: googleAuthentication.idToken,
+        accessToken: googleAuthentication.accessToken,
+      );
+
+      var userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
+      ref.read(userProvider.notifier).state =
+          AsyncValue.data(userCredential.user);
+      return userCredential.user;
+    } catch (e) {
+      ref.read(userProvider.notifier).state = AsyncValue.error(
+        e,
+        StackTrace.current,
+      );
+      return null;
+    }
   }
 }

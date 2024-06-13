@@ -99,28 +99,18 @@ class RegisterPage extends ConsumerWidget {
                     ?.copyWith(color: theme.hintColor),
               ),
               const Expanded(flex: 2, child: SizedBox()),
-              Row(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset(
-                      "assets/icons/twitter.png",
-                      height: 24,
-                      width: 24,
-                    ),
+              ElevatedButton.icon(
+                  style: Style.socialButtonStyle(theme),
+                  onPressed: () {
+                    _googleSignIn(context, ref);
+                  },
+                  icon: Image.asset(
+                    "assets/icons/google.png",
+                    height: 24,
+                    width: 24,
                   ),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Image.asset(
-                      "assets/icons/google.png",
-                      height: 24,
-                      width: 24,
-                    ),
-                  ),
-                ],
-              ),
+                  label: const Text("Google ile Oturum Aç"),
+                ),
               const Expanded(flex: 4, child: SizedBox()),
               GestureDetector(
                 onTap: () {
@@ -182,11 +172,7 @@ class RegisterPage extends ConsumerWidget {
 
             ref.read(userProvider.notifier).state = AsyncValue.data(user);
 
-            Navigator.pushNamedAndRemoveUntil(
-              context,
-              Routes.homePage,
-              (route) => false,
-            );
+            _navigateToHome(context);
           },
         ).catchError(
           (e) {
@@ -205,5 +191,24 @@ class RegisterPage extends ConsumerWidget {
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  _googleSignIn(BuildContext context, WidgetRef ref) async {
+    try {
+      User? user = await ref.read(authProvider).googleSignIn();
+      if (user != null) {
+        _navigateToHome(context);
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  void _navigateToHome(BuildContext context) {
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      Routes.homePage,
+      (route) => false,
+    );
   }
 }
