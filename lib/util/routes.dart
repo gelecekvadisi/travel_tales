@@ -6,6 +6,7 @@ import 'package:flutter/widgets.dart';
 import 'package:travel_tales/pages/home_page.dart';
 import 'package:travel_tales/pages/login_page.dart';
 import 'package:travel_tales/pages/register_page.dart';
+import 'package:travel_tales/pages/splash_screen.dart';
 
 class Routes {
   static const String loginPage = "login_page";
@@ -16,6 +17,8 @@ class Routes {
     late Widget page;
     switch (settings.name) {
       case "/":
+        page = const SplashScreen();
+        break;
       case loginPage:
         page = LoginPage();
         break;

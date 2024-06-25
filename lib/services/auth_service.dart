@@ -76,4 +76,8 @@ class AuthService {
       return null;
     }
   }
+
+  bool haveAccount() {
+    return firebaseAuth.currentUser != null;
+  }
 }
