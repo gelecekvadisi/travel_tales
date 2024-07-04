@@ -11,6 +11,7 @@ class CustomTextFormField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.onSaved,
     this.validator,
+    this.controller,
   });
 
   String label;
@@ -18,6 +19,7 @@ class CustomTextFormField extends StatefulWidget {
   TextInputType keyboardType;
   void Function(String?)? onSaved;
   String? Function(String?)? validator;
+  TextEditingController? controller;
 
   @override
   State<CustomTextFormField> createState() => _CustomTextFormFieldState();
@@ -47,6 +49,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
 
   TextFormField _buildField(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       keyboardType: widget.keyboardType,
       obscureText: isObscure,
       obscuringCharacter: Constants.obscuringCharacter,
